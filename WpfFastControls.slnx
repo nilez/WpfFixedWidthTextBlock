@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/WpfFastControls/WpfFastControls.csproj" />
+  <Project Path="samples/Sample.WithTextBlock/Sample.WithTextBlock.csproj" />
+  <Project Path="samples/Sample.WithFixedWidthTextBlock/Sample.WithFixedWidthTextBlock.csproj" />
+</Solution>

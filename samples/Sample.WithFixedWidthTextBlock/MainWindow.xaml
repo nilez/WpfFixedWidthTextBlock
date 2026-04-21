@@ -1,0 +1,18 @@
+<Window x:Class="Sample.WithFixedWidthTextBlock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FixedWidthTextBlock — 12 tiles × 10 updates/sec"
+        Height="520" Width="720"
+        Background="#1E1E2E">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom" Background="#313244">
+            <TextBlock x:Name="StatusText"
+                       Text="Updates: 0"
+                       Foreground="#CDD6F4"
+                       FontFamily="Consolas"
+                       FontSize="12"
+                       Padding="4,0"/>
+        </StatusBar>
+        <UniformGrid x:Name="TileGrid" Columns="4" Margin="8"/>
+    </DockPanel>
+</Window>
