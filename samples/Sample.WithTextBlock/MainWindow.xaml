@@ -4,15 +4,62 @@
         Title="Standard TextBlock — 12 tiles × 10 updates/sec"
         Height="520" Width="720"
         Background="#1E1E2E">
+    <Window.Resources>
+        <SolidColorBrush x:Key="PairForeground"   Color="#89B4FA"/>
+        <SolidColorBrush x:Key="PriceForeground"  Color="#A6E3A1"/>
+        <SolidColorBrush x:Key="TileBorderBrush"  Color="#45475A"/>
+        <SolidColorBrush x:Key="TileBackground"   Color="#313244"/>
+
+        <Style x:Key="PairLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily"          Value="Consolas"/>
+            <Setter Property="FontSize"            Value="11"/>
+            <Setter Property="Foreground"          Value="{StaticResource PairForeground}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin"              Value="0,4,0,2"/>
+        </Style>
+
+        <Style x:Key="PriceStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily"          Value="Consolas"/>
+            <Setter Property="FontSize"            Value="26"/>
+            <Setter Property="FontWeight"          Value="SemiBold"/>
+            <Setter Property="Foreground"          Value="{StaticResource PriceForeground}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin"              Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="TileStyle" TargetType="Border">
+            <Setter Property="Background"       Value="{StaticResource TileBackground}"/>
+            <Setter Property="BorderBrush"      Value="{StaticResource TileBorderBrush}"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="CornerRadius"     Value="6"/>
+            <Setter Property="Margin"           Value="4"/>
+        </Style>
+
+        <DataTemplate x:Key="TileTemplate">
+            <Border Style="{StaticResource TileStyle}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Pair}"  Style="{StaticResource PairLabelStyle}"/>
+                    <TextBlock Text="{Binding Price}" Style="{StaticResource PriceStyle}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom" Background="#313244">
-            <TextBlock x:Name="StatusText"
-                       Text="Updates: 0"
+            <TextBlock Text="{Binding StatusText}"
                        Foreground="#CDD6F4"
                        FontFamily="Consolas"
                        FontSize="12"
                        Padding="4,0"/>
         </StatusBar>
-        <UniformGrid x:Name="TileGrid" Columns="4" Margin="8"/>
+
+        <ItemsControl ItemsSource="{Binding Tiles}" ItemTemplate="{StaticResource TileTemplate}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4" Margin="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </DockPanel>
 </Window>

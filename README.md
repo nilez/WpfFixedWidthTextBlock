@@ -6,8 +6,6 @@ A single WPF control that eliminates layout-pass overhead for high-frequency tex
 
 Every time `TextBlock.Text` changes, WPF calls `InvalidateMeasure()` on the element. This propagates upward through the entire visual tree — panels, windows, and everything in between — triggering a full layout pass even though the text occupies exactly the same rectangle as before.
 
-At 10 updates per second across a grid of 12 tiles, that is **120 layout passes per second**, none of which change a single pixel of layout. In the FX pricing dashboard that motivated this library, this pattern consumed ~17% CPU just for render overhead.
-
 ### What WPF's layout system does on `TextBlock.Text` change
 
 ```
@@ -19,6 +17,8 @@ TextBlock.Text = "1.23457"
                           └─► parent Window
                                 └─► layout pass walks back down the tree
 ```
+
+![TextBlock layout ripple animation](docs/textblock-layout-ripple.gif)
 
 ## The Solution: `FixedWidthTextBlock`
 
@@ -34,7 +34,9 @@ FixedWidthTextBlock.Text = "1.23457"
         └─► OnRender()             // draw FormattedText — done
 ```
 
-CPU impact in the original dashboard: **17% → 6%** for the render thread.
+![FixedWidthTextBlock repaint-only animation](docs/fixedwidthtextblock-repaint-only.gif)
+
+CPU impact in the original dashboard: **~7% → ~3%** for the render thread — a 4 percentage point reduction.
 
 ## Quick Start
 
@@ -122,15 +124,15 @@ dotnet run --project samples/Sample.WithFixedWidthTextBlock
 
 ## Performance Results
 
-> _Profile screenshots to be added after measurement._
->
-> Suggested tool: **Visual Studio → Debug → Performance Profiler → CPU Usage**
-> or **JetBrains dotTrace** in Timeline mode.
->
-> Look for time in:
-> - `System.Windows.UIElement.Measure` — should be near-zero for `FixedWidthTextBlock`
-> - `System.Windows.UIElement.Arrange`
-> - `System.Windows.Media.MediaContext.RenderMessageHandler`
+When measured on a 12-tile FX pricing dashboard updating at 10 Hz.  
+Profiler: Visual Studio → Debug → Performance Profiler → CPU Usage.
+
+The CPU usage improves by 2 to 4% points. 
+
+Look for time in:
+- `System.Windows.UIElement.Measure` — near-zero for `FixedWidthTextBlock`
+- `System.Windows.UIElement.Arrange`
+- `System.Windows.Media.MediaContext.RenderMessageHandler`
 
 ## Implementation notes
 
