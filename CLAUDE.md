@@ -8,10 +8,6 @@ Guidance for Claude Code sessions working in this repository.
 
 Published as: **github.com/nilez/WpfFixedWidthTextBlock** (git remote `origin`).
 
-## Origin story (context for why this exists)
-
-This control was extracted from a larger WPF FX-pricing dashboard (`TilesPrism`, lives at `C:\_nilesh\_code\java-ract-example\TilesPrism` — not part of this repo). In that dashboard, 12 currency-pair tiles were updating ~10 times per second. Standard `TextBlock` calls `InvalidateMeasure()` on every `Text` change, which propagates up the visual tree causing a full layout pass 120 times/sec. CPU usage was ~17% just for render overhead. Replacing `TextBlock` with `FixedWidthTextBlock` dropped it to ~6%.
-
 ## The core idea
 
 - `FixedWidthTextBlock` inherits from `FrameworkElement` (not `Control` — no template overhead)
@@ -69,9 +65,6 @@ Target framework is `net9.0-windows`. Only Microsoft.NET.Sdk is used — no exte
 
 ## What NOT to do
 
-- Don't edit files in `C:\_nilesh\_code\java-ract-example\TilesPrism` — that's a separate repo/project, untouched by design.
-- Don't re-add `PriceElement.cs` or `IsolatingUniformGrid.cs`. The user scoped this library down to `FixedWidthTextBlock` only.
-- Don't replace `FrameworkElement` with `Control` — the render-only path depends on not having a template.
 - Don't add `AffectsMeasure` to the `Text` DP. That would defeat the entire point of the control.
 
 ## Style notes
